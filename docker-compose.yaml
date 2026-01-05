@@ -1,0 +1,28 @@
+services:
+  airline_booking_dev:
+    container_name: airline_booking_dev
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/src/app
+    env_file:
+      - ./.env
+    ports:
+      - "8000:8000"
+
+  booking_cron:
+    container_name: airline_booking_cron
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    command: cron -f
+    volumes:
+      - .:/src/app
+    env_file:
+      - ./.env
+    depends_on:
+      - airline_booking_dev
